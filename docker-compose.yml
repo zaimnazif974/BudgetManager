@@ -1,0 +1,29 @@
+# Gunakan format file Docker Compose versi 3.8
+version: '3.8'
+
+services:
+  # Definisikan service PostgreSQL
+  postgres_db:
+    # Build image dari Dockerfile di direktori saat ini
+    build: .
+    container_name: budgeting-BE
+    restart: always # Selalu restart kontainer jika berhenti
+
+    # Variabel lingkungan untuk konfigurasi database
+    # Nilai-nilai ini akan dimuat dari file .env secara otomatis
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+
+    # Map port 5432 di host ke port 5432 di dalam kontainer
+    ports:
+      - "15001:5432"
+
+    # Definisikan volume untuk menyimpan data database secara persisten
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+# Definisikan named volume untuk persistensi data
+volumes:
+  postgres-data:
