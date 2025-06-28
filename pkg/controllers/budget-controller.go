@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/zaimnazif974/budgeting-BE/pkg/config"
 	"github.com/zaimnazif974/budgeting-BE/pkg/models"
 	"github.com/zaimnazif974/budgeting-BE/pkg/utils"
@@ -72,4 +73,30 @@ func GetBudgetByID(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.ResponseJSON(w, http.StatusOK, budget, "Sucessfully fetch budgets")
+}
+
+// Edit budget
+func EditBudget(w http.ResponseWriter, r *http.Request) {
+	var budget models.Budget
+	var data models.Budget
+
+	id := mux.Vars(r)["id"]
+
+	utils.ParseBody(r, &data)
+
+	db := config.GetDB()
+
+	if err := db.First(&budget, id).Error; err != nil {
+		utils.WriteError(w, http.StatusBadGateway, "Couldn't get Budget")
+		log.Printf("EditBudget Error: %v", err)
+		return
+	}
+
+	if err := db.Model(&budget).Updates(data).Error; err != nil {
+		utils.WriteError(w, http.StatusBadGateway, "Couldn't update the Budget")
+		log.Printf("EditBudget Error: %v", err)
+		return
+	}
+
+	utils.ResponseJSON(w, http.StatusOK, budget, "Sucessfully update budgets")
 }

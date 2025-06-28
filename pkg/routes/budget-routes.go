@@ -20,11 +20,8 @@ var BudgetRoutes = func(router *mux.Router) {
 	// get budget by id
 	budgetRoutes.HandleFunc("/budget", controllers.GetBudgetByID).Methods("GET")
 
-	// // Get specific budget by ID in URL path
-	// budgetRoutes.HandleFunc("/budget/{id}", controllers.GetBudgetByID).Methods("GET")
-
-	// // Update budget by ID
-	// budgetRoutes.HandleFunc("/budget/{id}", controllers.UpdateBudget).Methods("PUT")
+	// Update budget by ID
+	budgetRoutes.HandleFunc("/budget/{id}/update", controllers.EditBudget).Methods("PUT")
 
 	// // Delete budget by ID
 	// budgetRoutes.HandleFunc("/budget/{id}", controllers.DeleteBudget).Methods("DELETE")
