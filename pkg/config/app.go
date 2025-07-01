@@ -24,12 +24,12 @@ type DatabaseConfig struct {
 // LoadDatabaseConfig loads database configuration from environment variables
 func LoadDatabaseConfig() *DatabaseConfig {
 	return &DatabaseConfig{
-		Host:     getEnv("DB_HOST", "localhost"),
-		Port:     getEnv("DB_PORT", "15001"),
-		User:     getEnv("POSTGRES_USER", "postgres"),
-		Password: getEnv("POSTGRES_PASSWORD", ""),
-		DBName:   getEnv("POSTGRES_DB", "budgeting"),
-		SSLMode:  getEnv("DB_SSLMODE", "disable"),
+		Host:     GetEnv("DB_HOST", "localhost"),
+		Port:     GetEnv("DB_PORT", "15001"),
+		User:     GetEnv("POSTGRES_USER", "postgres"),
+		Password: GetEnv("POSTGRES_PASSWORD", ""),
+		DBName:   GetEnv("POSTGRES_DB", "budgeting"),
+		SSLMode:  GetEnv("DB_SSLMODE", "disable"),
 	}
 }
 
@@ -88,8 +88,8 @@ func CloseDatabase() {
 	}
 }
 
-// getEnv gets environment variable with fallback to default value
-func getEnv(key, defaultValue string) string {
+// GetEnv gets environment variable with fallback to default value
+func GetEnv(key, defaultValue string) string {
 	if value := os.Getenv(key); value != "" {
 		return value
 	}
