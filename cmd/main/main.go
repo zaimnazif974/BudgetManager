@@ -29,7 +29,10 @@ func main() {
 
 	// 2. Run migrations
 	db := config.GetDB()
-	if err := db.AutoMigrate(&models.Budget{}); err != nil {
+	if err := db.AutoMigrate(
+		&models.Budget{},
+		&models.User{},
+	); err != nil {
 		log.Fatal("Failed to migrate database:", err)
 	}
 	log.Println("Database migration completed!")
