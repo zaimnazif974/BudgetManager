@@ -2,10 +2,12 @@ package middlewares
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/zaimnazif974/budgeting-BE/pkg/config"
 	"github.com/zaimnazif974/budgeting-BE/pkg/utils"
 )
 
@@ -25,11 +27,15 @@ func JWTMiddleware(next http.Handler) http.Handler {
 
 		claims := &utils.JWTClaims{}
 		token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-			return utils.JwtKey(), nil
+			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+			}
+
+			return []byte(config.GetEnv("JWT_SECRET_KEY", "nil")), nil
 		})
 
 		if err != nil || !token.Valid {
-			http.Error(w, "Token tidak valid", http.StatusUnauthorized)
+			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
 
