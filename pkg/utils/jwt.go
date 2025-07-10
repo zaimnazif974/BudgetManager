@@ -2,12 +2,13 @@ package utils
 
 import (
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 	"github.com/zaimnazif974/budgeting-BE/pkg/config"
 )
 
 type JWTClaims struct {
-	UserID string `json:"user_id"`
-	Role   string `json:"role"`
+	UserID uuid.UUID `json:"user_id"`
+	Role   string    `json:"role"`
 	jwt.RegisteredClaims
 }
 
