@@ -68,8 +68,9 @@ func setupRoutes() *mux.Router {
 	// API routes with version prefix
 	api := router.PathPrefix("/api/v1").Subrouter()
 
-	// Add budget routes
+	// Add routes from /routes
 	routes.BudgetRoutes(api)
+	routes.AuthRoutes(api)
 
 	return router
 }
