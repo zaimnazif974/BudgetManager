@@ -9,9 +9,13 @@ var AuthRoutes = func(router *mux.Router) {
 
 	authRoutes := router.PathPrefix("/auth").Subrouter()
 
-	authRoutes.HandleFunc("/google/callback", controllers.GoogleLogin).Methods("POST")
-
 	authRoutes.HandleFunc("/signup", controllers.SignUp).Methods("POST")
 
 	authRoutes.HandleFunc("/login", controllers.Login).Methods("POST")
+
+	authRoutes.HandleFunc("/{provider}/callback", controllers.GoogleLogin).Methods("GET")
+
+	authRoutes.HandleFunc("/{provider}", controllers.BeginGoogleAuth).Methods("GET")
+
+	authRoutes.HandleFunc("/{provider}/logout", controllers.Logout).Methods("GET")
 }

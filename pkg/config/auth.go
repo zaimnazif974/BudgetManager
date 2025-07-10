@@ -2,8 +2,13 @@ package config
 
 import (
 	// "github.com/gorilla/sessions"
+	"net/http"
+
+	"github.com/gorilla/sessions"
 	"github.com/markbates/goth"
+
 	// "github.com/markbates/goth/gothic"
+	"github.com/markbates/goth/gothic"
 	"github.com/markbates/goth/providers/google"
 )
 
@@ -27,7 +32,7 @@ func LoadGoogleAuth() *GoogleAuth {
 
 func LoadSessionConfig() *SessionConfig {
 	return &SessionConfig{
-		Key:    GetEnv("SESSION_KEY", "nil"),
+		Key:    GetEnv("SESSION_SECRET", "nil"),
 		MaxAge: 86400 * 30,
 		IsProd: false,
 	}
@@ -37,24 +42,25 @@ func AuthConfig() {
 
 	//Config
 	googleConfig := LoadGoogleAuth()
-	// sessionConfig := LoadSessionConfig()
+	sessionConfig := LoadSessionConfig()
 
-	// //Session Store
-	// store := sessions.NewCookieStore([]byte(sessionConfig.Key))
-	// store.MaxAge(int(sessionConfig.MaxAge))
+	//Session Store
+	store := sessions.NewCookieStore([]byte(sessionConfig.Key))
+	store.MaxAge(int(sessionConfig.MaxAge))
 
-	// store.Options.Path = "/"
-	// store.Options.HttpOnly = true
-	// store.Options.Secure = sessionConfig.IsProd
+	store.Options.Path = "/"
+	store.Options.HttpOnly = true
+	store.Options.Secure = sessionConfig.IsProd
+	store.Options.SameSite = http.SameSiteLaxMode
 
-	// gothic.Store = store
+	gothic.Store = store
 
 	//oAuth
 	goth.UseProviders(
 		google.New(
 			googleConfig.ClientID,
 			googleConfig.ClientSecret,
-			"https://localhost:8080/auth/google/callback",
+			"http://localhost:8080/api/v1/auth/google/callback",
 			"email", "profile",
 		),
 	)
