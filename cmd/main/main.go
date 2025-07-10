@@ -23,6 +23,8 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
+	config.AuthConfig()
+
 	// 1. Connect to database
 	config.ConnectDatabase()
 	defer config.CloseDatabase()

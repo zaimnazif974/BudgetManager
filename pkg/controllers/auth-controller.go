@@ -18,7 +18,8 @@ func GoogleLogin(w http.ResponseWriter, r *http.Request) {
 	// Getting user data from google
 	user, err := gothic.CompleteUserAuth(w, r)
 	if err != nil {
-		utils.WriteError(w, http.StatusUnauthorized, "Failed to login using google")
+		result := fmt.Sprintf("ComplateUserAuthL: %s", err)
+		utils.WriteError(w, http.StatusUnauthorized, result)
 		return
 	}
 
@@ -27,16 +28,20 @@ func GoogleLogin(w http.ResponseWriter, r *http.Request) {
 
 	db := config.GetDB()
 
-	query := map[any]string{
-		"Name":      user.Name,
-		"Provider":  user.Provider,
-		"Email":     user.Email,
-		"FirstName": user.FirstName,
-		"LastName":  user.LastName,
+	searchQuery := models.User{
+		Provider: user.Provider,
+		Email:    user.Email,
+	}
+
+	newUser := models.User{
+		Provider:  user.Provider,
+		Email:     user.Email,
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
 	}
 
 	//Search or create
-	db.Find(&appUser, query).FirstOrCreate(&appUser)
+	db.Where(searchQuery).FirstOrCreate(&appUser, newUser)
 
 	expirationTime := time.Now().Add(24 * time.Hour)
 
@@ -163,4 +168,15 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	utils.ResponseJSON(w, http.StatusAccepted, response, "Loggin google sucessfully")
+}
+
+func BeginGoogleAuth(w http.ResponseWriter, r *http.Request) {
+	gothic.BeginAuthHandler(w, r)
+}
+
+func Logout(w http.ResponseWriter, r *http.Request) {
+
+	gothic.Logout(w, r)
+
+	utils.ResponseJSON(w, http.StatusAccepted, nil, "Logout sucessfully")
 }
