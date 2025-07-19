@@ -62,6 +62,7 @@ func AuthConfig() {
 			googleConfig.ClientSecret,
 			"http://localhost:8080/api/v1/auth/google/callback",
 			"email", "profile",
+			"https://www.googleapis.com/auth/calendar.readonly", // <-- SCOPE BARU ANDA
 		),
 	)
 }

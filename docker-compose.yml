@@ -1,14 +1,40 @@
-# Gunakan format file Docker Compose versi 3.8
-version: '3.8'
+# Definisikan named volume untuk persistensi data
+volumes:
+  postgres-data:
+    driver: local
+
+# Definisikan network kustom agar container bisa berkomunikasi
+networks:
+  app-network:
+    driver: bridge
 
 services:
-  # Definisikan service PostgreSQL
-  postgres_db:
-    # Build image dari Dockerfile di direktori saat ini
-    build: .
-    container_name: budgeting-BE
-    restart: always # Selalu restart kontainer jika berhenti
 
+  go-backend:
+    container_name: go-app
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    # Format: <region>-docker.pkg.dev/<project-id>/<repo-name>/<image-name>:<tag>
+    image: sia-southeast2-docker.pkg.dev/your-gcp-project-id/my-go-backend/my-go-service:latest
+    restart: always
+    ports:
+      - "80:8080"
+    environment:
+      DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres_db:5432/${POSTGRES_DB}?sslmode=disable"
+      GIN_MODE: "release"
+      POSRT: 8080
+    depends_on:
+      - postgres_db
+    networks:
+      - app-network
+
+  postgres_db:
+    container_name: budgeting-BE
+    build: 
+      context: . 
+      dockerfile: Dockerfile.postgres
+    restart: always 
     # Variabel lingkungan untuk konfigurasi database
     # Nilai-nilai ini akan dimuat dari file .env secara otomatis
     environment:
@@ -23,7 +49,7 @@ services:
     # Definisikan volume untuk menyimpan data database secara persisten
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
 
-# Definisikan named volume untuk persistensi data
-volumes:
-  postgres-data:
+

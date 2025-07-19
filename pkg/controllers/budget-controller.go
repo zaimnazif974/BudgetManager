@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -109,4 +110,46 @@ func EditBudget(w http.ResponseWriter, r *http.Request) {
 	}
 
 	utils.ResponseJSON(w, http.StatusOK, budget, "Sucessfully update budgets")
+}
+
+type Calendar struct {
+	ID          string `json:"id"`
+	Summary     string `json:"summary"`
+	Description string `json:"description,omitempty"`
+	Primary     bool   `json:"primary,omitempty"`
+}
+
+type CalendarListResponse struct {
+	Items []Calendar `json:"items"`
+}
+
+func GetCalendar(w http.ResponseWriter, r *http.Request) {
+	var calendar CalendarListResponse
+
+	url := "https://www.googleapis.com/calendar/v3/users/me/calendarList"
+
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		log.Printf("error creating request: %v", err)
+		return
+	}
+
+	userData := r.Context().Value("userClaims").(*utils.JWTClaims)
+
+	req.Header.Set("Authorization", "Bearer "+userData.AcessToken)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Printf("error getting response: %v", err)
+		return
+	}
+
+	if err := json.NewDecoder(resp.Body).Decode(&calendar); err != nil {
+
+		log.Printf("error decoding response: %v", err)
+		return
+	}
+	log.Printf("Statuscode %v", resp.StatusCode)
+	utils.ResponseJSON(w, http.StatusOK, calendar, "Sucessfully getting calendar")
 }

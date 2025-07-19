@@ -15,10 +15,11 @@ func (user *User) BeforeCreate(tx *gorm.DB) (err error) {
 
 type User struct {
 	gorm.Model
-	ID        uuid.UUID `gorm:"type:uuid;primaryKey"`
-	Email     string    `gorm:"uniqueIndex"`
-	Provider  string
-	Password  string
-	FirstName string
-	LastName  string
+	ID         uuid.UUID `gorm:"type:uuid;primaryKey"`
+	Email      string    `gorm:"uniqueIndex"`
+	Provider   string
+	Password   string
+	FirstName  string
+	LastName   string
+	AcessToken string
 }

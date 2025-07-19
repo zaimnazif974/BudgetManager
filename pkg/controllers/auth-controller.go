@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -13,8 +14,14 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func GoogleLogin(w http.ResponseWriter, r *http.Request) {
+func enableCORS(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+}
 
+func GoogleLogin(w http.ResponseWriter, r *http.Request) {
+	enableCORS(&w)
 	// Getting user data from google
 	user, err := gothic.CompleteUserAuth(w, r)
 	if err != nil {
@@ -46,7 +53,8 @@ func GoogleLogin(w http.ResponseWriter, r *http.Request) {
 	expirationTime := time.Now().Add(24 * time.Hour)
 
 	claims := &utils.JWTClaims{
-		UserID: appUser.ID,
+		UserID:     appUser.ID,
+		AcessToken: user.AccessToken,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 		},
@@ -64,6 +72,7 @@ func GoogleLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Printf("acess Token: %v", user.AccessToken)
 	w.Header().Set("Content-Type", "application/json")
 	utils.ResponseJSON(w, http.StatusAccepted, response, "Loggin google sucessfully")
 }
