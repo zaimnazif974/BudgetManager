@@ -26,6 +26,8 @@ var BudgetRoutes = func(router *mux.Router) {
 	// Update budget by ID
 	budgetRoutes.Handle("/budget/{id}/update", middlewares.JWTMiddleware(http.HandlerFunc(controllers.EditBudget))).Methods("PUT")
 
+	budgetRoutes.Handle("/calendar", middlewares.JWTMiddleware(http.HandlerFunc(controllers.GetCalendar))).Methods("GET")
+
 	// // Delete budget by ID
 	// budgetRoutes.HandleFunc("/budget/{id}", controllers.DeleteBudget).Methods("DELETE")
 }
