@@ -57,7 +57,6 @@ jobs:
         with:
           instance_name: ${{ env.GCE_INSTANCE }}
           zone: ${{ env.GCE_ZONE }}
-          use_os_login: true
           command: |
             set -e
             
