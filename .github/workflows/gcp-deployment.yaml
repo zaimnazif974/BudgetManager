@@ -51,6 +51,7 @@ jobs:
         with:
           instance_name: ${{ env.GCE_INSTANCE }}
           zone: ${{ env.GCE_ZONE }}
+          use_os_login: true
           command: |
             # Pindah ke direktori aplikasi di VM
             cd /home/$USER/app
