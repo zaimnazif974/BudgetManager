@@ -16,14 +16,14 @@ services:
       context: .
       dockerfile: Dockerfile.app
     # Format: <region>-docker.pkg.dev/<project-id>/<repo-name>/<image-name>:<tag>
-    image: sia-southeast2-docker.pkg.dev/your-gcp-project-id/my-go-backend/my-go-service:latest
+    image: asia-southeast2-docker.pkg.dev/your-gcp-project-id/my-go-backend/my-go-service:latest
     restart: always
     ports:
       - "80:8080"
     environment:
       DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres_db:5432/${POSTGRES_DB}?sslmode=disable"
       GIN_MODE: "release"
-      POST: 8080
+      PORT: 8080
     depends_on:
       - postgres_db
     networks:

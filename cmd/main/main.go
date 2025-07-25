@@ -9,7 +9,7 @@ import (
 	"syscall"
 
 	"github.com/gorilla/mux"
-	"github.com/joho/godotenv"
+	// "github.com/joho/godotenv"
 	"github.com/zaimnazif974/budgeting-BE/pkg/config"
 	"github.com/zaimnazif974/budgeting-BE/pkg/models"
 	"github.com/zaimnazif974/budgeting-BE/pkg/routes"
@@ -17,11 +17,11 @@ import (
 
 func main() {
 
-	//Reading .env
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	// //Reading .env
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	log.Fatal("Error loading .env file")
+	// }
 
 	config.AuthConfig()
 
