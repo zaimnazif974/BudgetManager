@@ -21,9 +21,23 @@ services:
     ports:
       - "80:8080"
     environment:
-      DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres_db:5432/${POSTGRES_DB}?sslmode=disable"
+      # Variabel untuk koneksi database (dibaca dari .env)
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+
+      # Variabel untuk aplikasi (dibaca dari .env)
+      APP_PORT: ${APP_PORT}
       GIN_MODE: "release"
-      PORT: 8080
+      
+      # Variabel untuk oAuth dan JWT (dibaca dari .env)
+      CLIENT_ID: ${CLIENT_ID}
+      CLIENT_SECRET: ${CLIENT_SECRET}
+      SESSION_SECRET: ${SESSION_SECRET}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      GOOGLE_CALLBACK_URL: ${GOOGLE_CALLBACK_URL}
     depends_on:
       - postgres_db
     networks:
