@@ -23,7 +23,7 @@ services:
     environment:
       DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres_db:5432/${POSTGRES_DB}?sslmode=disable"
       GIN_MODE: "release"
-      POSRT: 8080
+      POST: 8080
     depends_on:
       - postgres_db
     networks:
