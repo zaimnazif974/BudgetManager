@@ -55,12 +55,14 @@ func AuthConfig() {
 
 	gothic.Store = store
 
+	callbackUrl := GetEnv("GOOGLE_CALLBACK_URL", "nil")
+
 	//oAuth
 	goth.UseProviders(
 		google.New(
 			googleConfig.ClientID,
 			googleConfig.ClientSecret,
-			"http://localhost:8080/api/v1/auth/google/callback",
+			callbackUrl,
 			"email", "profile",
 			"https://www.googleapis.com/auth/calendar.readonly", // <-- SCOPE BARU ANDA
 		),
